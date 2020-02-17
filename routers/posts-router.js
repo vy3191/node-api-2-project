@@ -62,7 +62,20 @@ router.delete("/:id", async (req,res) => {
   } catch(err) {
      res.status(500).json({ error: "The posts information could not be retrieved." });
   }
-})
+});
+
+// Requests for comments on posts.
+router.get("/:id/comments", (req,res) => {
+   try {
+     const id = req.params.id;
+     db.findPostComments()
+       .then( comments => {
+          res.json(comments);
+       })
+  } catch(err) {
+    res.status(500).json({ error: "The posts information could not be retrieved." });
+ }
+});
 
 
 module.exports = router;

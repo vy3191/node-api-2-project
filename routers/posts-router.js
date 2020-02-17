@@ -34,6 +34,34 @@ router.post("/", async (req,res) => {
   } catch(err) {
      res.status(500).json({ error: "The posts information could not be retrieved." });
   }
+});
+
+router.put("/:id", async (req,res) => {
+  try {
+     const {title,contents} = req.body;
+     const {id} = req.params;
+     if(!title || !contents) res.status(400).json({ errorMessage: "Please provide title and contents for the post." })
+     const response = await db.findById(id);
+     if( !response.length === 0) res.status(404).json({ message: "The post with the specified ID does not exist." });
+     const count  = await db.update(id, req.body);
+     if(count > 0) res.status(200).json(count);
+        
+  } catch(err) {
+     res.status(500).json({ error: "The posts information could not be retrieved." });
+  }
+});
+
+router.delete("/:id", async (req,res) => {
+  try {    
+     const {id} = req.params;     
+     const response = await db.findById(id);
+     if( response.length === 0 && response[0].id) res.status(404).json({message: "The post with the specified ID does not exist."});
+     const count = await db.remove(id);
+     if(count > 0) res.status(200).json(response);    
+        
+  } catch(err) {
+     res.status(500).json({ error: "The posts information could not be retrieved." });
+  }
 })
 
 
